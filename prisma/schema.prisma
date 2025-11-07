@@ -21,9 +21,8 @@ model chipId {
 }
 
 model sensor {
-  id       String  @id @default(uuid())
-  sensorId String
-  chipId   String
-  status   Boolean
-  chip     chipId  @relation(fields: [chipId], references: [id])
+  id     String  @id @default(uuid())
+  chipId String
+  status Boolean
+  chip   chipId  @relation(fields: [chipId], references: [id])
 }

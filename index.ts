@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 const app = express()
 
-const PORT = 5000;
+const PORT = 3000;
 app.use(express.json())
 
 type sensor = {
@@ -26,7 +26,7 @@ const demoChips = [
 ]
 
 app.post("/data", async (req, res) => {
-    const {chipId, sersors} : {chipId: string, sersors: sensor[]} = req.body
+    const {chipId, sensors} : {chipId: string, sensors: sensor[]} = req.body
 
     const chip = await prisma.chipId.findUnique({
         where: {
@@ -46,22 +46,29 @@ app.post("/data", async (req, res) => {
             }
         })
 
-        await prisma.sensor.createMany({
-            data: sersors.map((sensor: sensor) => ({
-                sensorId: sensor.id,
-                status: sensor.status,
-                chipId: chipId
-            }))
-        })
+        // this is wrong, we should create the sensors one by one
+        for (const sensor of sensors) {
+            await prisma.sensor.create({
+                data: {
+                    id: sensor.id,
+                    status: sensor.status,
+                    chipId: chipId
+                }
+            })
+        }
     }else {
-        await prisma.sensor.updateMany({
-            where: {
-                chipId: chipId
-            },
-            data: sersors.map((sensor: sensor) => ({
-                status: sensor.status
-            }))
+      // this is wrong, we should update the sensors one by one
+      for (const sensor of sensors) {
+        await prisma.sensor.update({
+          where: {
+            chipId: chipId,
+            id: sensor.id as string,
+          },
+          data: {
+            status: sensor.status
+          }
         })
+      }
     }
 
     res.status(200).json({

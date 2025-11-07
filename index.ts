@@ -116,68 +116,156 @@ app.get("/", (_req, res) => {
             line-height: 1.5;
           }
 
-          #statusGrid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-            width: 100%;
-            max-width: 800px;
-          }
-
-          .chip-card {
-            background: rgba(31, 41, 55, 0.85);
-            border-radius: 12px;
-            padding: 24px 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+          #tableContainer {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            transition: transform 0.2s ease;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 700px;
+            min-height: 500px;
           }
 
-          .chip-card:hover {
-            transform: translateY(-4px);
+          .table-layout {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 1fr 2fr 1fr;
+            gap: 20px;
+            align-items: center;
+            justify-items: center;
           }
 
-          .chip-title {
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+          .table {
+            grid-column: 2;
+            grid-row: 2;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 2px 8px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #374151;
+            position: relative;
+          }
+
+          .table::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+          }
+
+          .table-label {
+            position: absolute;
+            bottom: -30px;
             font-size: 0.9rem;
             color: #9ca3af;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
           }
 
           .chair {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            background: #111827;
-            border-radius: 10px;
-            padding: 12px 14px;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           }
 
-          .chair-name {
-            font-weight: 500;
+          .chair:hover {
+            transform: scale(1.1);
           }
 
-          .status-pill {
-            font-size: 0.85rem;
-            padding: 6px 12px;
-            border-radius: 999px;
+          .chair-top {
+            grid-column: 2;
+            grid-row: 1;
+          }
+
+          .chair-bottom {
+            grid-column: 2;
+            grid-row: 3;
+          }
+
+          .chair-left {
+            grid-column: 1;
+            grid-row: 2;
+          }
+
+          .chair-right {
+            grid-column: 3;
+            grid-row: 2;
+          }
+
+          .chair-available {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2));
+            border: 3px solid rgba(16, 185, 129, 0.6);
+          }
+
+          .chair-occupied {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.2));
+            border: 3px solid rgba(239, 68, 68, 0.6);
+          }
+
+          .chair-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+          }
+
+          .chair-label {
+            font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
           }
 
-          .occupied {
-            background: rgba(239, 68, 68, 0.18);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.35);
-          }
-
-          .available {
-            background: rgba(16, 185, 129, 0.18);
+          .chair-available .chair-label {
             color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.35);
+          }
+
+          .chair-occupied .chair-label {
+            color: #fca5a5;
+          }
+
+          .status-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid #1f2937;
+          }
+
+          .chair-available .status-indicator {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+          }
+
+          .chair-occupied .status-indicator {
+            background: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+          }
+
+          #emptyState {
+            color: #9ca3af;
+            text-align: center;
+            padding: 40px;
           }
 
           footer {
@@ -185,26 +273,49 @@ app.get("/", (_req, res) => {
             color: #6b7280;
             font-size: 0.85rem;
           }
+
+          @media (max-width: 600px) {
+            .table-layout {
+              width: 300px;
+              height: 300px;
+            }
+
+            .chair {
+              width: 60px;
+              height: 60px;
+            }
+
+            .chair-icon {
+              font-size: 1.5rem;
+            }
+          }
         </style>
       </head>
       <body>
         <header>
           <h1>Mess Table Occupancy</h1>
           <p class="description">
-            Live overview of each chair tracked by the ESP32 chip. A table uses a
-            single chip; each sensor represents one chair's current status.
+            Live overview of table occupancy. Chairs are arranged around the table.
           </p>
         </header>
 
-        <div id="statusGrid">
+        <div id="tableContainer">
           <p id="emptyState">Waiting for status updates...</p>
         </div>
 
-        <footer>Auto-refreshing every 5 seconds · Demo ready</footer>
+        <footer>Auto-refreshing every 5 seconds</footer>
 
         <script>
-          const statusGrid = document.getElementById('statusGrid');
+          const tableContainer = document.getElementById('tableContainer');
           const emptyState = document.getElementById('emptyState');
+
+          const chairPositions = ['top', 'right', 'bottom', 'left'];
+          const chairIcons = {
+            top: '🪑',
+            right: '🪑',
+            bottom: '🪑',
+            left: '🪑'
+          };
 
           async function fetchStatus() {
             try {
@@ -217,44 +328,41 @@ app.get("/", (_req, res) => {
               renderStatus(payload.chips || []);
             } catch (error) {
               console.error('Failed to fetch status', error);
-              statusGrid.innerHTML = '<p style="color: #f87171;">Unable to load data from the chip. Check connection.</p>';
+              tableContainer.innerHTML = '<p style="color: #f87171;">Unable to load data from the chip. Check connection.</p>';
             }
           }
 
           function renderStatus(chips) {
-            if (!chips.length) {
-              statusGrid.innerHTML = '';
-              statusGrid.appendChild(emptyState);
+            if (!chips.length || !chips[0].sensors || !chips[0].sensors.length) {
+              tableContainer.innerHTML = '';
+              tableContainer.appendChild(emptyState);
               emptyState.textContent = 'No chip data yet. Waiting for the ESP32 to report.';
               return;
             }
 
-            statusGrid.innerHTML = chips
-              .map(function (chip) {
-                const sensors = chip.sensors || [];
+            const chip = chips[0];
+            const sensors = chip.sensors || [];
+            
+            let chairsHtml = '<div class="table-layout">';
+            chairsHtml += '<div class="table"><div class="table-label">Table</div></div>';
 
-                const sensorMarkup = sensors
-                  .map(function (sensor) {
-                    const isOccupied = sensor.status;
-                    return (
-                      '<div class="chair">' +
-                        '<span class="chair-name">Chair ' + sensor.sensorId + '</span>' +
-                        '<span class="status-pill ' + (isOccupied ? 'occupied' : 'available') + '">' +
-                          (isOccupied ? 'Occupied' : 'Available') +
-                        '</span>' +
-                      '</div>'
-                    );
-                  })
-                  .join('');
+            sensors.forEach(function(sensor, index) {
+              const position = chairPositions[index % chairPositions.length];
+              const isOccupied = sensor.status;
+              const chairClass = isOccupied ? 'chair-occupied' : 'chair-available';
+              const statusText = isOccupied ? 'Occupied' : 'Available';
+              
+              chairsHtml += (
+                '<div class="chair chair-' + position + ' ' + chairClass + '">' +
+                  '<div class="status-indicator"></div>' +
+                  '<div class="chair-icon">' + chairIcons[position] + '</div>' +
+                  '<div class="chair-label">' + statusText + '</div>' +
+                '</div>'
+              );
+            });
 
-                return (
-                  '<section class="chip-card">' +
-                    '<div class="chip-title">Chip ' + chip.id + '</div>' +
-                    '<div>' + (sensorMarkup || '<p>No sensors registered.</p>') + '</div>' +
-                  '</section>'
-                );
-              })
-              .join('');
+            chairsHtml += '</div>';
+            tableContainer.innerHTML = chairsHtml;
           }
 
           fetchStatus();

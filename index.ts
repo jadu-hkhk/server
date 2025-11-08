@@ -61,8 +61,10 @@ app.post("/data", async (req, res) => {
       for (const sensor of sensors) {
         await prisma.sensor.update({
           where: {
-            chipId: chipId,
-            id: sensor.id as string,
+            id_chipId: {
+              id: sensor.id as string,
+              chipId: chipId
+            }
           },
           data: {
             status: sensor.status
@@ -87,197 +89,258 @@ app.get("/", (_req, res) => {
           * {
             box-sizing: border-box;
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            padding: 0;
           }
 
           body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1f2937, #111827);
-            color: #f9fafb;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 32px 16px;
-            gap: 24px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 3rem 1.5rem;
+            position: relative;
+          }
+
+          body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+          }
+
+          body > * {
+            position: relative;
+            z-index: 1;
           }
 
           header {
             text-align: center;
-            max-width: 600px;
+            margin-bottom: 3rem;
           }
 
           h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
           }
 
-          p.description {
-            color: #d1d5db;
-            line-height: 1.5;
+          .description {
+            color: #94a3b8;
+            font-size: 1rem;
+            font-weight: 400;
           }
 
-          #tableContainer {
+          #tablesGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+          }
+
+          .table-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-            max-width: 700px;
-            min-height: 500px;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+
+          .table-wrapper:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+          }
+
+          .table-label {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
           }
 
           .table-layout {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 1;
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            grid-template-rows: 1fr 2fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 1rem;
             align-items: center;
             justify-items: center;
           }
 
           .table {
-            grid-column: 2;
-            grid-row: 2;
+            grid-column: 2 / 5;
+            grid-row: 2 / 5;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #4a5568, #2d3748);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 2px 8px rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid #374151;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+              inset 0 2px 8px rgba(0, 0, 0, 0.3),
+              0 4px 16px rgba(0, 0, 0, 0.2);
             position: relative;
+            overflow: hidden;
           }
 
-          .table::before {
+          .table::after {
             content: '';
             position: absolute;
-            width: 80%;
-            height: 80%;
-            border: 2px dashed rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-          }
-
-          .table-label {
-            position: absolute;
-            bottom: -30px;
-            font-size: 0.9rem;
-            color: #9ca3af;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            height: 60%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
           }
 
           .chair {
-            width: 80px;
-            height: 80px;
+            width: 75px;
+            height: 75px;
             border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            gap: 0.35rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
           }
 
           .chair:hover {
-            transform: scale(1.1);
+            transform: translateY(-6px) scale(1.08);
           }
 
-          .chair-top {
-            grid-column: 2;
-            grid-row: 1;
-          }
-
-          .chair-bottom {
-            grid-column: 2;
-            grid-row: 3;
-          }
-
-          .chair-left {
-            grid-column: 1;
-            grid-row: 2;
-          }
-
-          .chair-right {
-            grid-column: 3;
-            grid-row: 2;
-          }
+          .chair-top-left { grid-column: 1; grid-row: 1; }
+          .chair-top-right { grid-column: 5; grid-row: 1; }
+          .chair-bottom-left { grid-column: 1; grid-row: 5; }
+          .chair-bottom-right { grid-column: 5; grid-row: 5; }
+          .chair-left { grid-column: 1; grid-row: 3; }
+          .chair-right { grid-column: 5; grid-row: 3; }
 
           .chair-available {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2));
-            border: 3px solid rgba(16, 185, 129, 0.6);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: 2px solid #10b981;
+            box-shadow: 
+              0 4px 16px rgba(34, 197, 94, 0.3),
+              0 0 0 0 rgba(34, 197, 94, 0.4);
+          }
+
+          .chair-available:hover {
+            box-shadow: 
+              0 8px 24px rgba(34, 197, 94, 0.4),
+              0 0 0 4px rgba(34, 197, 94, 0.2);
           }
 
           .chair-occupied {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.2));
-            border: 3px solid rgba(239, 68, 68, 0.6);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: 2px solid #f87171;
+            box-shadow: 
+              0 4px 16px rgba(239, 68, 68, 0.3),
+              0 0 0 0 rgba(239, 68, 68, 0.4);
+          }
+
+          .chair-occupied:hover {
+            box-shadow: 
+              0 8px 24px rgba(239, 68, 68, 0.4),
+              0 0 0 4px rgba(239, 68, 68, 0.2);
           }
 
           .chair-icon {
-            font-size: 2rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            font-size: 1.75rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+          }
+
+          .chair:hover .chair-icon {
+            transform: scale(1.1);
           }
 
           .chair-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             letter-spacing: 0.05em;
           }
 
-          .chair-available .chair-label {
-            color: #6ee7b7;
-          }
-
-          .chair-occupied .chair-label {
-            color: #fca5a5;
-          }
-
-          .status-indicator {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 3px solid #1f2937;
-          }
-
-          .chair-available .status-indicator {
-            background: #10b981;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
-          }
-
-          .chair-occupied .status-indicator {
-            background: #ef4444;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
-          }
-
           #emptyState {
-            color: #9ca3af;
+            color: #64748b;
             text-align: center;
-            padding: 40px;
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+            font-size: 1rem;
           }
 
           footer {
-            margin-top: auto;
-            color: #6b7280;
-            font-size: 0.85rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: 4rem;
+            font-weight: 400;
           }
 
-          @media (max-width: 600px) {
+          @media (max-width: 768px) {
+            body {
+              padding: 2rem 1rem;
+            }
+
+            h1 {
+              font-size: 1.875rem;
+            }
+
+            #tablesGrid {
+              grid-template-columns: 1fr;
+              gap: 2rem;
+            }
+
+            .table-wrapper {
+              padding: 1.25rem;
+            }
+
             .table-layout {
-              width: 300px;
-              height: 300px;
+              max-width: 260px;
+              gap: 0.875rem;
+            }
+
+            .chair {
+              width: 65px;
+              height: 65px;
+            }
+
+            .chair-icon {
+              font-size: 1.5rem;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .table-layout {
+              max-width: 240px;
+              gap: 0.75rem;
             }
 
             .chair {
@@ -286,83 +349,88 @@ app.get("/", (_req, res) => {
             }
 
             .chair-icon {
-              font-size: 1.5rem;
+              font-size: 1.35rem;
+            }
+
+            .chair-label {
+              font-size: 0.65rem;
             }
           }
         </style>
       </head>
       <body>
         <header>
-          <h1>Mess Table Occupancy</h1>
-          <p class="description">
-            Live overview of table occupancy. Chairs are arranged around the table.
-          </p>
+          <h1>Mess Table Monitor</h1>
+          <p class="description">Real-time occupancy status</p>
         </header>
 
-        <div id="tableContainer">
+        <div id="tablesGrid">
           <p id="emptyState">Waiting for status updates...</p>
         </div>
 
         <footer>Auto-refreshing every 5 seconds</footer>
 
         <script>
-          const tableContainer = document.getElementById('tableContainer');
+          const tablesGrid = document.getElementById('tablesGrid');
           const emptyState = document.getElementById('emptyState');
 
-          const chairPositions = ['top', 'right', 'bottom', 'left'];
-          const chairIcons = {
-            top: '🪑',
-            right: '🪑',
-            bottom: '🪑',
-            left: '🪑'
-          };
+          const chairPositions = [
+            { class: 'chair-top-left' },
+            { class: 'chair-top-right' },
+            { class: 'chair-right' },
+            { class: 'chair-bottom-right' },
+            { class: 'chair-bottom-left' },
+            { class: 'chair-left' }
+          ];
 
           async function fetchStatus() {
             try {
               const response = await fetch('/api/status');
-              if (!response.ok) {
-                throw new Error('Bad response');
-              }
-
+              if (!response.ok) throw new Error('Bad response');
               const payload = await response.json();
               renderStatus(payload.chips || []);
             } catch (error) {
               console.error('Failed to fetch status', error);
-              tableContainer.innerHTML = '<p style="color: #f87171;">Unable to load data from the chip. Check connection.</p>';
+              tablesGrid.innerHTML = '<p style="color: #f87171; text-align: center; padding: 2rem; grid-column: 1 / -1;">Unable to load data. Check connection.</p>';
             }
           }
 
           function renderStatus(chips) {
-            if (!chips.length || !chips[0].sensors || !chips[0].sensors.length) {
-              tableContainer.innerHTML = '';
-              tableContainer.appendChild(emptyState);
-              emptyState.textContent = 'No chip data yet. Waiting for the ESP32 to report.';
+            if (!chips.length) {
+              tablesGrid.innerHTML = '';
+              tablesGrid.appendChild(emptyState);
+              emptyState.textContent = 'No chip data yet. Waiting for ESP32 to report.';
               return;
             }
 
-            const chip = chips[0];
-            const sensors = chip.sensors || [];
-            
-            let chairsHtml = '<div class="table-layout">';
-            chairsHtml += '<div class="table"><div class="table-label">Table</div></div>';
+            let html = '';
+            chips.forEach(function(chip) {
+              const sensors = chip.sensors || [];
+              if (!sensors.length) return;
 
-            sensors.forEach(function(sensor, index) {
-              const position = chairPositions[index % chairPositions.length];
-              const isOccupied = sensor.status;
-              const chairClass = isOccupied ? 'chair-occupied' : 'chair-available';
-              const statusText = isOccupied ? 'Occupied' : 'Available';
-              
-              chairsHtml += (
-                '<div class="chair chair-' + position + ' ' + chairClass + '">' +
-                  '<div class="status-indicator"></div>' +
-                  '<div class="chair-icon">' + chairIcons[position] + '</div>' +
-                  '<div class="chair-label">' + statusText + '</div>' +
-                '</div>'
-              );
+              html += '<div class="table-wrapper">';
+              html += '<div class="table-label">Table ' + chip.id + '</div>';
+              html += '<div class="table-layout">';
+              html += '<div class="table"></div>';
+
+              sensors.slice(0, 6).forEach(function(sensor, index) {
+                const pos = chairPositions[index] || chairPositions[index % chairPositions.length];
+                const isOccupied = sensor.status;
+                const chairClass = isOccupied ? 'chair-occupied' : 'chair-available';
+                const statusText = isOccupied ? 'Taken' : 'Free';
+                
+                html += (
+                  '<div class="chair ' + pos.class + ' ' + chairClass + '">' +
+                    '<div class="chair-icon">🪑</div>' +
+                    '<div class="chair-label">' + statusText + '</div>' +
+                  '</div>'
+                );
+              });
+
+              html += '</div></div>';
             });
 
-            chairsHtml += '</div>';
-            tableContainer.innerHTML = chairsHtml;
+            tablesGrid.innerHTML = html || '<p id="emptyState">No tables found.</p>';
           }
 
           fetchStatus();

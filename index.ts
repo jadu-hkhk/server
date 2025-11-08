@@ -94,29 +94,11 @@ app.get("/", (_req, res) => {
 
           body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            color: #fff;
+            background: #faf9f6;
+            color: #3d3d3d;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            padding: 3rem 1.5rem;
-            position: relative;
-          }
-
-          body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-          }
-
-          body > * {
-            position: relative;
-            z-index: 1;
+            padding: 2.5rem 1.5rem;
+            line-height: 1.6;
           }
 
           header {
@@ -125,27 +107,24 @@ app.get("/", (_req, res) => {
           }
 
           h1 {
-            font-size: 2.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
+            font-size: 1.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #2d2d2d;
+            letter-spacing: -0.01em;
           }
 
           .description {
-            color: #94a3b8;
-            font-size: 1rem;
+            color: #6b6b6b;
+            font-size: 0.9rem;
             font-weight: 400;
           }
 
           #tablesGrid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-            max-width: 1400px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3.5rem;
+            max-width: 1200px;
             margin: 0 auto;
           }
 
@@ -153,39 +132,28 @@ app.get("/", (_req, res) => {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.25rem;
-            padding: 1.5rem;
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-          }
-
-          .table-wrapper:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.15);
+            gap: 0;
+            position: relative;
           }
 
           .table-label {
             font-size: 0.875rem;
-            color: #cbd5e1;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 600;
+            color: #6b6b6b;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.01em;
           }
 
           .table-layout {
             position: relative;
             width: 100%;
-            max-width: 300px;
+            max-width: 280px;
             aspect-ratio: 1;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(5, 1fr);
-            gap: 1rem;
+            gap: 0.875rem;
             align-items: center;
             justify-items: center;
           }
@@ -195,44 +163,29 @@ app.get("/", (_req, res) => {
             grid-row: 2 / 5;
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 
-              inset 0 2px 8px rgba(0, 0, 0, 0.3),
-              0 4px 16px rgba(0, 0, 0, 0.2);
+            background: #f0ede8;
+            border-radius: 10px;
+            border: 1px solid #e8e5e0;
             position: relative;
-            overflow: hidden;
-          }
-
-          .table::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60%;
-            height: 60%;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
           }
 
           .chair {
-            width: 75px;
-            height: 75px;
-            border-radius: 12px;
+            width: 68px;
+            height: 68px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.35rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 0.3rem;
+            transition: transform 0.15s ease, opacity 0.15s ease;
             position: relative;
             cursor: pointer;
           }
 
           .chair:hover {
-            transform: translateY(-6px) scale(1.08);
+            transform: scale(1.03);
+            opacity: 0.9;
           }
 
           .chair-top-left { grid-column: 1; grid-row: 1; }
@@ -243,104 +196,61 @@ app.get("/", (_req, res) => {
           .chair-right { grid-column: 5; grid-row: 3; }
 
           .chair-available {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            border: 2px solid #10b981;
-            box-shadow: 
-              0 4px 16px rgba(34, 197, 94, 0.3),
-              0 0 0 0 rgba(34, 197, 94, 0.4);
-          }
-
-          .chair-available:hover {
-            box-shadow: 
-              0 8px 24px rgba(34, 197, 94, 0.4),
-              0 0 0 4px rgba(34, 197, 94, 0.2);
+            background: #d4edda;
+            border: 1.5px solid #b8dcc4;
+            color: #2d5a3d;
           }
 
           .chair-occupied {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            border: 2px solid #f87171;
-            box-shadow: 
-              0 4px 16px rgba(239, 68, 68, 0.3),
-              0 0 0 0 rgba(239, 68, 68, 0.4);
-          }
-
-          .chair-occupied:hover {
-            box-shadow: 
-              0 8px 24px rgba(239, 68, 68, 0.4),
-              0 0 0 4px rgba(239, 68, 68, 0.2);
+            background: #f8d7da;
+            border: 1.5px solid #e8bcc0;
+            color: #6d3a3f;
           }
 
           .chair-icon {
-            font-size: 1.75rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            transition: transform 0.3s ease;
-          }
-
-          .chair:hover .chair-icon {
-            transform: scale(1.1);
+            font-size: 1.4rem;
+            opacity: 0.85;
           }
 
           .chair-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            letter-spacing: 0.05em;
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
           }
 
           #emptyState {
-            color: #64748b;
+            color: #8b8b8b;
             text-align: center;
             padding: 4rem 2rem;
             grid-column: 1 / -1;
-            font-size: 1rem;
+            font-size: 0.95rem;
           }
 
           footer {
             text-align: center;
-            color: #64748b;
-            font-size: 0.875rem;
+            color: #8b8b8b;
+            font-size: 0.8125rem;
             margin-top: 4rem;
             font-weight: 400;
           }
 
           @media (max-width: 768px) {
             body {
-              padding: 2rem 1rem;
+              padding: 1.5rem 1rem;
             }
 
             h1 {
-              font-size: 1.875rem;
+              font-size: 1.75rem;
             }
 
             #tablesGrid {
               grid-template-columns: 1fr;
-              gap: 2rem;
-            }
-
-            .table-wrapper {
-              padding: 1.25rem;
+              gap: 2.5rem;
             }
 
             .table-layout {
               max-width: 260px;
-              gap: 0.875rem;
-            }
-
-            .chair {
-              width: 65px;
-              height: 65px;
-            }
-
-            .chair-icon {
-              font-size: 1.5rem;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .table-layout {
-              max-width: 240px;
-              gap: 0.75rem;
+              gap: 0.625rem;
             }
 
             .chair {
@@ -351,9 +261,25 @@ app.get("/", (_req, res) => {
             .chair-icon {
               font-size: 1.35rem;
             }
+          }
+
+          @media (max-width: 480px) {
+            .table-layout {
+              max-width: 240px;
+              gap: 0.5rem;
+            }
+
+            .chair {
+              width: 55px;
+              height: 55px;
+            }
+
+            .chair-icon {
+              font-size: 1.25rem;
+            }
 
             .chair-label {
-              font-size: 0.65rem;
+              font-size: 0.6rem;
             }
           }
         </style>
@@ -391,7 +317,7 @@ app.get("/", (_req, res) => {
               renderStatus(payload.chips || []);
             } catch (error) {
               console.error('Failed to fetch status', error);
-              tablesGrid.innerHTML = '<p style="color: #f87171; text-align: center; padding: 2rem; grid-column: 1 / -1;">Unable to load data. Check connection.</p>';
+              tablesGrid.innerHTML = '<p style="color: #8b5a5a; text-align: center; padding: 2rem; grid-column: 1 / -1;">Unable to load data. Check connection.</p>';
             }
           }
 

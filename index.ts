@@ -334,12 +334,19 @@ app.get("/", (_req, res) => {
               const sensors = chip.sensors || [];
               if (!sensors.length) return;
 
+              // Sort sensors by ID to ensure correct chair positioning
+              const sortedSensors = sensors.slice().sort(function(a, b) {
+                const numA = parseInt(a.id.match(/\d+$/)?.[0] || '0') || 0;
+                const numB = parseInt(b.id.match(/\d+$/)?.[0] || '0') || 0;
+                return numA - numB;
+              });
+
               html += '<div class="table-wrapper">';
               html += '<div class="table-label">Table ' + chip.id + '</div>';
               html += '<div class="table-layout">';
               html += '<div class="table"></div>';
 
-              sensors.slice(0, 6).forEach(function(sensor, index) {
+              sortedSensors.slice(0, 6).forEach(function(sensor, index) {
                 const pos = chairPositions[index] || chairPositions[index % chairPositions.length];
                 const isOccupied = sensor.status;
                 const chairClass = isOccupied ? 'chair-occupied' : 'chair-available';
@@ -373,9 +380,20 @@ app.get("/api/status", async (_req, res) => {
         }
     })
 
+    // Sort sensors by ID to ensure consistent chair positioning
+    const chipsWithSortedSensors = chips.map(chip => ({
+        ...chip,
+        sensors: chip.sensors.sort((a, b) => {
+            // Extract numeric part from sensor IDs like "chair-1", "chair-2", etc.
+            const numA = parseInt(a.id.match(/\d+$/)?.[0] || '0') || 0;
+            const numB = parseInt(b.id.match(/\d+$/)?.[0] || '0') || 0;
+            return numA - numB;
+        })
+    }))
+
     res.status(200).json({
         message: "Data received successfully",
-        chips: chips
+        chips: chipsWithSortedSensors
     })
 })
 

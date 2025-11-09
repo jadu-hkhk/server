@@ -294,7 +294,7 @@ app.get("/", (_req, res) => {
           <p id="emptyState">Waiting for status updates...</p>
         </div>
 
-        <footer>Auto-refreshing every 5 seconds</footer>
+        <footer>Auto-refreshing every second</footer>
 
         <script>
           const tablesGrid = document.getElementById('tablesGrid');
@@ -367,7 +367,7 @@ app.get("/", (_req, res) => {
           }
 
           fetchStatus();
-          setInterval(fetchStatus, 5000);
+          setInterval(fetchStatus, 1500);
         </script>
       </body>
     </html>`)
